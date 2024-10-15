@@ -1412,17 +1412,7 @@ static int mtk_poll_rx(struct napi_struct *napi, int budget,
 				      0 : RX_DMA_GET_SPORT(trxd.rxd4) - 1;
 		}
 		
-		if (mac == 4) mac = 1;
-		
-#if defined(CONFIG_MEDIATEK_NETSYS_RX_V2)
-			if (MTK_HAS_CAPS(eth->soc->caps, MTK_NETSYS_RX_V2))
-				mac = (RX_DMA_GET_CRSN(trxd.rxd5) == HIT_BIND_FORCE_TO_CPU) ? 1 : mac;
-			else
-#endif
-				mac = (RX_DMA_GET_CRSN(trxd.rxd4) == HIT_BIND_FORCE_TO_CPU) ? 1 : mac;
- 
-		
- 
+		if (mac == 4) mac = 0;
 		if (unlikely(mac < 0 || mac >= MTK_MAC_COUNT ||
 			     !eth->netdev[mac]))
 			goto release_desc;
@@ -2516,8 +2506,7 @@ static void mtk_tx_timeout(struct net_device *dev)
 	netif_err(eth, tx_err, dev,
 		  "transmit timed out\n");
 
-	if (atomic_read(&reset_lock) == 0)
-		schedule_work(&eth->pending_work);
+
 }
 
 static irqreturn_t mtk_handle_irq_rx(int irq, void *priv)

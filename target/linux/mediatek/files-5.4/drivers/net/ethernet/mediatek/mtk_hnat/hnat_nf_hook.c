@@ -726,6 +726,12 @@ static inline void hnat_set_alg(const struct nf_hook_state *state,
 	skb_hnat_alg(skb) = val;
 }
 
+static inline void hnat_set_tag(const struct nf_hook_state *state,
+				struct sk_buff *skb, int val)
+{
+	skb_hnat_magic_tag(skb) = val;
+}
+
 static inline void hnat_set_head_frags(const struct nf_hook_state *state,
 				       struct sk_buff *head_skb, int val,
 				       void (*fn)(const struct nf_hook_state *state,
@@ -991,8 +997,8 @@ mtk_hnat_ipv6_nf_pre_routing(void *priv, struct sk_buff *skb,
 		goto drop;
 
 	if (!IS_WHNAT(state->in) && IS_EXT(state->in) && IS_SPACE_AVAILABLE_HEAD(skb)) {
-		skb_hnat_alg(skb) = 0;
-		skb_hnat_magic_tag(skb) = HNAT_MAGIC_TAG;
+		hnat_set_head_frags(state, skb, 0, hnat_set_alg);
+		hnat_set_head_frags(state, skb, HNAT_MAGIC_TAG, hnat_set_alg);
 	}
 
 	if (!is_magic_tag_valid(skb))
@@ -1065,8 +1071,8 @@ mtk_hnat_ipv4_nf_pre_routing(void *priv, struct sk_buff *skb,
 		
 
 	if (!IS_WHNAT(state->in) && IS_EXT(state->in) && IS_SPACE_AVAILABLE_HEAD(skb)) {
-		skb_hnat_alg(skb) = 0;
-		skb_hnat_magic_tag(skb) = HNAT_MAGIC_TAG;
+		hnat_set_head_frags(state, skb, 0, hnat_set_alg);
+		hnat_set_head_frags(state, skb, HNAT_MAGIC_TAG, hnat_set_alg);
 	}
 
 	if (!is_magic_tag_valid(skb))
@@ -1127,8 +1133,8 @@ mtk_hnat_br_nf_local_in(void *priv, struct sk_buff *skb,
 		goto drop;
 	
 	if (!IS_WHNAT(state->in) && IS_EXT(state->in) && IS_SPACE_AVAILABLE_HEAD(skb)) {
-		skb_hnat_alg(skb) = 0;
-		skb_hnat_magic_tag(skb) = HNAT_MAGIC_TAG;
+		hnat_set_head_frags(state, skb, 0, hnat_set_alg);
+		hnat_set_head_frags(state, skb, HNAT_MAGIC_TAG, hnat_set_alg);
 	}
 
 	if (!is_magic_tag_valid(skb))
@@ -2295,11 +2301,11 @@ static unsigned int mtk_hnat_nf_post_routing(
 	
 	if (!IS_LAN(out) && !IS_WAN(out) && !IS_EXT(out))
 		return 0;
+		
 
-#if defined(CONFIG_MEDIATEK_NETSYS_RX_V2)
+	#if defined(CONFIG_MEDIATEK_NETSYS_RX_V2)
 	if (!IS_WHNAT(out) && IS_EXT(out) && FROM_WED(skb))
-		return 0;
-#endif
+	#endif
 
 	trace_printk("[%s] case hit, %x-->%s, reason=%x\n", __func__,
 		     skb_hnat_iface(skb), out->name, skb_hnat_reason(skb));
@@ -2697,4 +2703,3 @@ int mtk_hqos_ptype_cb(struct sk_buff *skb, struct net_device *dev,
 
 	return 0;
 }
-

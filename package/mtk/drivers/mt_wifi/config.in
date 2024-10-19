@@ -23,25 +23,25 @@ if MTK_WIFI_DRIVER
 choice
 	prompt "Choose First WiFi Interface"
 	config MTK_FIRST_IF_NONE
-	bool "None"
+	    bool "None"
 
 	config MTK_FIRST_IF_MT7615E
-	bool "MT7615E"
-	select MTK_WIFI_MT_MAC
-	select MTK_MT_MAC
-	select MTK_CHIP_MT7615E
+	    bool "MT7615E"
+	    select MTK_WIFI_MT_MAC
+	    select MTK_MT_MAC
+	    select MTK_CHIP_MT7615E
 
 	config MTK_FIRST_IF_MT7622
-	bool "MT7622"
-	select MTK_WIFI_MT_MAC
-	select MTK_MT_MAC
-	select MTK_CHIP_MT7622
+	    bool "MT7622"
+	    select MTK_WIFI_MT_MAC
+	    select MTK_MT_MAC
+	    select MTK_CHIP_MT7622
 
 	config MTK_FIRST_IF_MT7626
-	bool "MT7626"
-	select MTK_WIFI_MT_MAC
-	select MTK_MT_MAC
-	select MTK_CHIP_MT7626
+	    bool "MT7626"
+	    select MTK_WIFI_MT_MAC
+	    select MTK_MT_MAC
+	    select MTK_CHIP_MT7626
 
 	config MTK_FIRST_IF_AXE
         bool "MT6867"
@@ -67,7 +67,7 @@ choice
         select MTK_MT_MAC
         select MTK_CHIP_MT7916
 
-        config MTK_FIRST_IF_MT7981
+    config MTK_FIRST_IF_MT7981
         bool "MT7981"
         select MTK_WIFI_MT_MAC
         select MTK_MT_MAC
@@ -78,19 +78,19 @@ endchoice
 choice
 	prompt "Choose Second WiFi Interface"
 	config MTK_SECOND_IF_NONE
-	bool "None"
+	    bool "None"
 
 	config MTK_SECOND_IF_MT7615E
-	bool "MT7615E"
-	select MTK_WIFI_MT_MAC
-	select MTK_CHIP_MT7615E
-	select MTK_MULTI_INF_SUPPORT
+	    bool "MT7615E"
+	    select MTK_WIFI_MT_MAC
+	    select MTK_CHIP_MT7615E
+	    select MTK_MULTI_INF_SUPPORT
 
 	config MTK_SECOND_IF_AXE
-	bool "MT6867"
-	select MTK_WIFI_MT_MAC
-	select MTK_MT_MAC
-	select MTK_CHIP_AXE
+	    bool "MT6867"
+	    select MTK_WIFI_MT_MAC
+	    select MTK_MT_MAC
+	    select MTK_CHIP_AXE
 
 	config MTK_SECOND_IF_MT7915
         bool "MT7915"
@@ -109,34 +109,34 @@ endchoice
 choice
 	prompt "Choose Third WiFi Interface"
 	config MTK_THIRD_IF_NONE
-	bool "None"
+	    bool "None"
 
 	config MTK_THIRD_IF_MT7615E
-	bool "MT7615E"
-	select MTK_WIFI_MT_MAC
-	select MTK_CHIP_MT7615E
-	select MTK_MULTI_INF_SUPPORT
+	    bool "MT7615E"
+	    select MTK_WIFI_MT_MAC
+	    select MTK_CHIP_MT7615E
+	    select MTK_MULTI_INF_SUPPORT
 
 	config MTK_THIRD_IF_MT7915
         bool "MT7915"
         select MTK_WIFI_MT_MAC
         select MTK_MT_MAC
         select MTK_CHIP_MT7915
-	select MTK_MULTI_INF_SUPPORT
+	    select MTK_MULTI_INF_SUPPORT
 
     config MTK_THIRD_IF_MT7916
         bool "MT7916"
         select MTK_WIFI_MT_MAC
         select MTK_MT_MAC
         select MTK_CHIP_MT7916
-	select MTK_MULTI_INF_SUPPORT
+	    select MTK_MULTI_INF_SUPPORT
 	
 endchoice
 
 config  MTK_RT_FIRST_CARD
         int
         depends on ! MTK_FIRST_IF_NONE
-	default 7615 if MTK_FIRST_IF_MT7615E
+	    default 7615 if MTK_FIRST_IF_MT7615E
         default 7622 if MTK_FIRST_IF_MT7622
         default 7626 if MTK_FIRST_IF_MT7626
         default 6867 if MTK_FIRST_IF_AXE
@@ -195,6 +195,9 @@ choice
 	config MTK_MT_WIFI_MT7981_DEFAULT_FIRMWARE
 	bool "default firmware"
 
+	config MTK_MT_WIFI_MT7981_ax57
+	bool "mt7981-asus-ax57"
+
 	config MTK_MT_WIFI_MT7981_20230306
 	bool "mt7981-fw-20230306"
 
@@ -209,6 +212,9 @@ choice
 
 	config MTK_MT_WIFI_MT7981_20231024
 	bool "mt7981-fw-20231024"
+
+	config MTK_MT_WIFI_MT7981_20240613
+	bool "mt7981-fw-20240613"
 endchoice
 
 choice
@@ -217,6 +223,9 @@ choice
 
 	config MTK_MT_WIFI_MT7986_DEFAULT_FIRMWARE
 	bool "default firmware"
+
+	config MTK_MT_WIFI_MT7986_ax6000
+	bool "mt7986-asus-ax6000"
 
 	config MTK_MT_WIFI_MT7986_20221208
 	bool "mt7986-fw-20221208"
@@ -233,11 +242,14 @@ endchoice
 
 config MTK_MT_WIFI_FIRMWARE_PATH
 	string
+	default mt7981-asus-ax57   if MTK_MT_WIFI_MT7981_ax57
 	default mt7981-fw-20230306 if MTK_MT_WIFI_MT7981_20230306
 	default mt7981-fw-20230330 if MTK_MT_WIFI_MT7981_20230330
 	default mt7981-fw-20230411 if MTK_MT_WIFI_MT7981_20230411
 	default mt7981-fw-20230717 if MTK_MT_WIFI_MT7981_20230717
 	default mt7981-fw-20231024 if MTK_MT_WIFI_MT7981_20231024
+	default mt7981-fw-20240613 if MTK_MT_WIFI_MT7981_20240613
+	default mt7986-asus-ax6000 if MTK_MT_WIFI_MT7986_ax6000
 	default mt7986-fw-20221208 if MTK_MT_WIFI_MT7986_20221208
 	default mt7986-fw-20230421 if MTK_MT_WIFI_MT7986_20230421
 	default mt7986-fw-20230808 if MTK_MT_WIFI_MT7986_20230808

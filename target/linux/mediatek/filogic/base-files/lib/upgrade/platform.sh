@@ -106,6 +106,9 @@ platform_do_upgrade() {
 	openwrt,one|\
 	netcore,n60|\
 	routerich,ax3000-ubootmod|\
+	tplink,tl-7dr7230-v1|\
+	tplink,tl-7dr7230-v2|\
+	tplink,tl-7dr7250-v1|\
 	tplink,tl-xtr8488|\
 	wirelesstag,zx7981pd-ubootmod|\
 	zyxel,ex5601-t0-ubootmod)
@@ -144,15 +147,22 @@ platform_do_upgrade() {
 	asus,rt-ax52|\
 	asus,rt-ax59u|\
 	asus,tuf-ax4200|\
+	asus,tuf-ax4200q|\
 	asus,tuf-ax6000)
 		CI_UBIPART="UBI_DEV"
 		CI_KERNPART="linux"
 		nand_do_upgrade "$1"
 		;;
+	cudy,wr3000h-v1|\
+	cudy,wr3000p-v1)
+		CI_UBIPART="ubi"
+		nand_do_upgrade "$1"
+		;;
 	cudy,re3000-v1|\
 	cudy,wr3000-v1|\
 	yuncore,ax835|\
-	wavlink,wl-wn573hx3)
+	wavlink,wl-wn573hx3|\
+	totolink,x6000r)
 		default_do_upgrade "$1"
 		;;
 	dlink,aquila-pro-ai-m30-a1|\
@@ -282,6 +292,7 @@ platform_pre_upgrade() {
 	asus,rt-ax52|\
 	asus,rt-ax59u|\
 	asus,tuf-ax4200|\
+	asus,tuf-ax4200q|\
 	asus,tuf-ax6000)
 		asus_initial_setup
 		;;
